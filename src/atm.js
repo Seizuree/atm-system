@@ -74,7 +74,9 @@ class ATM {
   transfer(targetUser, amount, rl, callback) {
     this.#requireLogin()
 
-    if (isNaN(amount)) return 'Invalid transfer amount.'
+    if (typeof targetUser !== 'string' || !targetUser || !amount) {
+      return 'Please enter target user!'
+    } else if (isNaN(amount)) return 'Invalid transfer amount.'
 
     let targetAccount = Database.getAccount(targetUser)
 
@@ -91,16 +93,16 @@ class ATM {
         targetAccount = new Account(targetUser, newPin)
         Database.saveAccount(targetAccount)
 
-        this.#processTransfer(targetUser, targetAccount, amount)
+        this.processTransfer(targetUser, targetAccount, amount)
         callback()
       })
     } else {
-      this.#processTransfer(targetUser, targetAccount, amount)
+      this.processTransfer(targetUser, targetAccount, amount)
       callback()
     }
   }
 
-  #processTransfer(targetUser, targetAccount, amount) {
+  processTransfer(targetUser, targetAccount, amount) {
     let transferredAmount = 0
 
     if (this.currentUser.balance < amount) {

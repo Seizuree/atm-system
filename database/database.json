@@ -1,24 +1,24 @@
 {
   "Brian": {
     "username": "Brian",
-    "hashedPin": "$2a$10$NyIQSum.u9QFjmJDvAoSzed.HrhGFv8JxheID93u3JTWWOZLXy0Qe",
+    "hashedPin": "$2a$10$6c4pRt1eqFL6CtCBxuIGT.IefZ4Blbm4aHrsFk1s0yZlyrl06yeF.",
     "balance": 0,
     "transactionHistory": [
       {
-        "time": "2025-02-13T01:03:49.839Z",
-        "detail": "Deposit: +$500"
+        "time": "2025-02-13T03:08:51.617Z",
+        "detail": "Deposit: +$100"
       },
       {
-        "time": "2025-02-13T01:08:00.325Z",
-        "detail": "Transfer to Doe: -$500"
+        "time": "2025-02-13T03:08:58.019Z",
+        "detail": "Transfer to Venetta: -$100"
       },
       {
-        "time": "2025-02-13T01:08:00.325Z",
-        "detail": "Debt created to Doe: $200"
+        "time": "2025-02-13T03:08:58.019Z",
+        "detail": "Debt created to Venetta: $100"
       },
       {
-        "time": "2025-02-13T01:09:21.882Z",
-        "detail": "Deposit: +$0"
+        "time": "2025-02-13T03:09:05.155Z",
+        "detail": "Debt paid: -$100"
       }
     ],
     "dailyWithdrawn": 0,
@@ -26,14 +26,18 @@
     "failedAttempts": 0,
     "locked": false
   },
-  "Doe": {
-    "username": "Doe",
-    "hashedPin": "$2a$10$JjPHq8LiiK3SeGNvg7Mcau9BZB8vmfIUDP.oVYK23Wxm132BZEEoO",
-    "balance": 500,
+  "Venetta": {
+    "username": "Venetta",
+    "hashedPin": "$2a$10$yEgiy54lstDQie1wpSedz.jQsIaeAcP.13grq8vd1Vfpl111zGZN2",
+    "balance": 200,
     "transactionHistory": [
       {
-        "time": "2025-02-13T01:08:00.318Z",
-        "detail": "Deposit: +$500"
+        "time": "2025-02-13T03:08:58.019Z",
+        "detail": "Deposit: +$100"
+      },
+      {
+        "time": "2025-02-13T03:09:05.154Z",
+        "detail": "Debt paid by Brian: +$100"
       }
     ],
     "dailyWithdrawn": 0,

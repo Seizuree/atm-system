@@ -46,12 +46,13 @@ class Account {
       amount -= debtPayment
 
       for (const user of Database.getAllAccounts()) {
-        if (user.hasDebtTo(this.username)) {
+        if (this.hasDebtTo(user.username)) {
           user.balance += debtPayment
-          user.logTransaction(
-            `Debt repaid by ${this.username}: +$${debtPayment}`
-          )
+          user.logTransaction(`Debt paid by ${this.username}: +$${debtPayment}`)
           Database.saveAccount(user)
+          console.log(
+            `${this.username} paid $${debtPayment} to ${user.username}`
+          )
           break
         }
       }
@@ -99,9 +100,19 @@ class Account {
   }
 
   hasDebtTo(user) {
-    return this.transactionHistory.some((t) =>
-      t.detail.includes(`Debt created to ${user}`)
-    )
+    let totalDebt = 0
+    let totalPaid = 0
+
+    for (const t of this.transactionHistory) {
+      if (t.detail.includes(`Debt created to ${user}:`)) {
+        totalDebt += parseFloat(t.detail.split(': $')[1]) // Extract amount
+      }
+      if (t.detail.includes(`Debt paid:`)) {
+        totalPaid += parseFloat(t.detail.split(': -$')[1]) // Extract amount
+      }
+    }
+
+    return totalDebt > totalPaid // Only return true if debt remains
   }
 }
 

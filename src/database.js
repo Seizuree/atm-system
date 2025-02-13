@@ -1,27 +1,13 @@
 import fs from 'fs'
 import Account from './account.js'
 
-// const accounts = {}
-
-const FILE_PATH = './database/database.json'
+// Use a separate test file when running Jest tests
+const IS_TEST = process.env.NODE_ENV === 'test'
+const FILE_PATH = IS_TEST
+  ? './database/test-database.json'
+  : './database/database.json'
 
 class Database {
-  // static getAccount(username) {
-  //   return accounts[username] || null
-  // }
-
-  // static saveAccount(account) {
-  //   accounts[account.username] = account
-  // }
-
-  // static clear() {
-  //   Object.keys(accounts).forEach((key) => delete accounts[key])
-  // }
-
-  // static getAllAccounts() {
-  //   return Object.values(accounts)
-  // }
-
   static loadAccounts() {
     try {
       return JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'))
@@ -66,6 +52,10 @@ class Database {
       Object.assign(account, data)
       return account
     })
+  }
+
+  static clear() {
+    fs.writeFileSync(FILE_PATH, JSON.stringify({}, null, 2)) // Clear database for tests
   }
 }
 

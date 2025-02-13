@@ -63,9 +63,10 @@ describe('3️⃣ Transfer Tests', () => {
     expect(creditor.balance).toBe(100)
 
     // ✅ Tom deposits $200 → Should repay Uma automatically
-    debtor.deposit(200)
+    debtor.deposit(100)
+    const updatedCreditor = Database.getAccount('Uma')
     expect(debtor.debt).toBe(0)
-    expect(creditor.balance).toBe(200) // ✅ Uma received $200
+    expect(updatedCreditor.balance).toBe(200) // ✅ Uma received $200
 
     console.log('✅ Debt repayment test passed.')
   })

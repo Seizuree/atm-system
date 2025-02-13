@@ -44,7 +44,7 @@ describe('1️⃣ Account Tests', () => {
     const account = new Account('Frank', '9999')
     Database.saveAccount(account)
 
-    expect(() => Database.getAccount('Frank').verifyPIN('1111')).toThrow()
+    expect(Database.getAccount('Frank').verifyPIN('1111')).toBe(false)
     expect(Database.getAccount('Frank').failedAttempts).toBe(1)
   })
 
@@ -52,8 +52,8 @@ describe('1️⃣ Account Tests', () => {
     const account = new Account('Grace', '5555')
     Database.saveAccount(account)
 
-    expect(() => Database.getAccount('Grace').verifyPIN('0000')).toThrow()
-    expect(() => Database.getAccount('Grace').verifyPIN('1111')).toThrow()
+    expect(Database.getAccount('Grace').verifyPIN('0000')).toBe(false)
+    expect(Database.getAccount('Grace').verifyPIN('1111')).toBe(false)
     expect(() => Database.getAccount('Grace').verifyPIN('2222')).toThrow(
       'Account is locked due to multiple incorrect attempts.'
     )

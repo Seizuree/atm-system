@@ -9,9 +9,14 @@ class ATM {
   register(username, pin) {
     if (Database.getAccount(username))
       throw new Error('Account already exists.')
-    const account = new Account(username, pin)
-    Database.saveAccount(account)
-    return 'Account created successfully.'
+
+    try {
+      const account = new Account(username, pin)
+      Database.saveAccount(account)
+      return 'Account created successfully.'
+    } catch (error) {
+      throw new Error(`Account creation failed: ${error.message}`)
+    }
   }
 
   login(username, rl, callback) {
@@ -93,16 +98,16 @@ class ATM {
         targetAccount = new Account(targetUser, newPin)
         Database.saveAccount(targetAccount)
 
-        this.processTransfer(targetUser, targetAccount, amount)
+        this.#processTransfer(targetUser, targetAccount, amount)
         callback()
       })
     } else {
-      this.processTransfer(targetUser, targetAccount, amount)
+      this.#processTransfer(targetUser, targetAccount, amount)
       callback()
     }
   }
 
-  processTransfer(targetUser, targetAccount, amount) {
+  #processTransfer(targetUser, targetAccount, amount) {
     let transferredAmount = 0
 
     if (this.currentUser.balance < amount) {

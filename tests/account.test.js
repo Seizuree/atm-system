@@ -1,63 +1,159 @@
-import Account from '../src/account.js'
+import ATM from '../src/atm.js'
 import Database from '../src/database.js'
-import { test, expect, beforeEach, describe } from '@jest/globals'
+import { test, expect, beforeEach, describe, jest } from '@jest/globals'
 
 beforeEach(() => {
   process.env.NODE_ENV = 'test' // Use test database
   Database.clear() // Reset database before each test
 })
 
-describe('1️⃣ Account Tests', () => {
-  test('✅ Must test valid account creation', () => {
-    const account = new Account('Alice', '1234')
-    Database.saveAccount(account)
+describe('Account Tests', () => {
+  test('Must test valid account creation', () => {
+    const atm = new ATM()
+    atm.register('Alice', '1234')
     expect(Database.getAccount('Alice').username).toBe('Alice')
   })
 
-  test('❌ Must test invalid PIN formats', () => {
-    expect(() => new Account('Bob', 'abcd')).toThrow(
-      'PIN must be exactly 4 digits.'
+  test('Must test invalid PIN formats', () => {
+    const atm = new ATM()
+    expect(() => atm.register('Bob', 'abcd')).toThrow(
+      'PIN must be numbers and exactly 4 digits.'
     )
-    expect(() => new Account('Charlie', '12345')).toThrow(
-      'PIN must be exactly 4 digits.'
+    expect(() => atm.register('Charlie', '12345')).toThrow(
+      'PIN must be numbers and exactly 4 digits.'
     )
   })
 
-  test('❌ Must test duplicate accounts', () => {
-    const account = new Account('David', '5678')
-    Database.saveAccount(account)
+  test('Must test duplicate accounts', () => {
+    const atm = new ATM()
+    atm.register('David', '5678')
 
-    expect(() => {
-      if (Database.getAccount('David')) {
-        throw new Error('Account already exists.')
+    expect(() => atm.register('David', '5678')).toThrow(
+      'Account already exists.'
+    )
+  })
+
+  test('Must test correct PIN validation', (done) => {
+    const atm = new ATM()
+    atm.register('Eve', '4321') // Create an account
+
+    // Mock the readline interface to simulate user input
+    const mockReadline = {
+      question: (_, callback) => callback('4321'), // Simulates entering correct PIN
+    }
+
+    atm.login('Eve', mockReadline, () => {
+      expect(atm.currentUser.username).toBe('Eve') // ✅ User should be logged in
+      done()
+    })
+  })
+
+  test('Must test incorrect PIN handling', (done) => {
+    const atm = new ATM()
+    atm.register('Frank', '9999')
+
+    const mockReadline = {
+      question: (_, callback) => callback('1111'),
+    }
+
+    atm.login('Frank', mockReadline, () => {
+      // After login, the account's verifyPIN() should have been called.
+      // Retrieve the updated account from the database.
+      const updatedAccount = Database.getAccount('Frank')
+
+      // Expect that the login attempt failed (currentUser remains null)
+      expect(atm.currentUser).toBeNull()
+
+      // Expect that failedAttempts increased to 1
+      expect(updatedAccount.failedAttempts).toBe(1)
+
+      done() // Signal Jest that the async test is complete.
+    })
+  })
+
+  test('Must test account lockout after 3 failures', (done) => {
+    const atm = new ATM()
+    atm.register('Grace', '5555')
+
+    const mockReadline1 = { question: (_, callback) => callback('0000') } // 1st attempt: wrong PIN
+    const mockReadline2 = { question: (_, callback) => callback('1111') } // 2nd attempt: wrong PIN
+    const mockReadline3 = { question: (_, callback) => callback('2222') } // 3rd attempt: wrong PIN → should lock
+
+    atm.login('Grace', mockReadline1, () => {
+      // After first attempt, no one should be logged in
+      expect(atm.currentUser).toBeNull()
+
+      // Second login attempt with wrong PIN
+      atm.login('Grace', mockReadline2, () => {
+        expect(atm.currentUser).toBeNull()
+
+        // Third login attempt with wrong PIN should lock the account
+        atm.login('Grace', mockReadline3, () => {
+          const updatedAccount = Database.getAccount('Grace')
+          expect(updatedAccount.locked).toBe(true)
+          done()
+        })
+      })
+    })
+  })
+
+  test('Must prevent logging into another account while logged in', (done) => {
+    const atm = new ATM()
+    atm.register('David', '1234')
+    atm.register('Eve', '4321')
+
+    const mockReadlineDavid = {
+      question: (_, callback) => callback('1234'), // Simulate entering correct PIN for David
+    }
+
+    // David logs in
+    atm.login('David', mockReadlineDavid, () => {
+      expect(atm.currentUser.username).toBe('David')
+      const mockReadlineEve = {
+        question: (_, callback) => callback('4321'), // Simulate entering PIN for Eve
       }
-    }).toThrow('Account already exists.')
+
+      const consoleSpy = jest.spyOn(console, 'log') // Capture console logs
+
+      // Attempt to login as Eve while David is still logged in
+      atm.login('Eve', mockReadlineEve, () => {
+        // Ensure an error message was logged
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Error: David is currently logged in.'
+        )
+
+        // Ensure David is still logged in
+        expect(atm.currentUser.username).toBe('David')
+
+        consoleSpy.mockRestore()
+        done()
+      })
+    })
   })
 
-  test('✅ Must test correct PIN validation', () => {
-    const account = new Account('Eve', '4321')
-    Database.saveAccount(account)
-    expect(Database.getAccount('Eve').verifyPIN('4321')).toBe(true)
-  })
+  test('Must check if the account is found', (done) => {
+    const atm = new ATM()
 
-  test('❌ Must test incorrect PIN handling', () => {
-    const account = new Account('Frank', '9999')
-    Database.saveAccount(account)
+    // Create a mock readline object
+    const mockReadline = {
+      question: (_, callback) => {
+        // This should never be called because the account won't be found
+        callback('dummy')
+      },
+    }
 
-    expect(Database.getAccount('Frank').verifyPIN('1111')).toBe(false)
-    expect(Database.getAccount('Frank').failedAttempts).toBe(1)
-  })
+    // Spy on console.log to capture output
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
 
-  test('❌ Must test account lockout after 3 failures', () => {
-    const account = new Account('Grace', '5555')
-    Database.saveAccount(account)
+    // Attempt to login with a username that does not exist
+    atm.login('NonExistentUser', mockReadline, () => {
+      // Verify that the error message was logged
+      expect(consoleSpy).toHaveBeenCalledWith('Error: Account not found.')
+      // Ensure that no user is logged in
+      expect(atm.currentUser).toBeNull()
 
-    expect(Database.getAccount('Grace').verifyPIN('0000')).toBe(false)
-    expect(Database.getAccount('Grace').verifyPIN('1111')).toBe(false)
-    expect(() => Database.getAccount('Grace').verifyPIN('2222')).toThrow(
-      'Account is locked due to multiple incorrect attempts.'
-    )
-
-    expect(Database.getAccount('Grace').locked).toBe(true)
+      consoleSpy.mockRestore()
+      done()
+    })
   })
 })

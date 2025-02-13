@@ -1,58 +1,17 @@
 {
-  "Uma": {
-    "username": "Uma",
-    "hashedPin": "$2a$10$qHWc7u3m9iKXVz7Xjr4O/eExeXKPXiv3vYH8uOwh.V5uDheD8peI6",
-    "balance": 200,
+  "Mia": {
+    "username": "Mia",
+    "hashedPin": "$2a$10$.KHjT.fCfEeDmDZQL5ayEOuo06dEmIPZP6RE/qRHRWZv/agLwTnUW",
+    "balance": 2000,
     "transactionHistory": [
       {
-        "time": "2025-02-13T04:20:40.906Z",
-        "detail": "Deposit: +$100"
-      },
-      {
-        "time": "2025-02-13T04:20:41.169Z",
-        "detail": "Debt paid by Tom: +$100"
+        "time": "2025-02-13T20:07:57.454Z",
+        "detail": "Deposit: +$2000"
       }
     ],
     "dailyWithdrawn": 0,
     "debt": 0,
     "failedAttempts": 0,
     "locked": false
-  },
-  "Tom": {
-    "username": "Tom",
-    "hashedPin": "$2a$10$Sd.IFTcHIt6J64AfRQnCmuUHTKB8XSwaWKwpQPSJ5zR8N5gWsuX06",
-    "balance": 0,
-    "transactionHistory": [
-      {
-        "time": "2025-02-13T04:20:40.905Z",
-        "detail": "Deposit: +$100"
-      },
-      {
-        "time": "2025-02-13T04:20:40.906Z",
-        "detail": "Transfer to Uma: -$100"
-      },
-      {
-        "time": "2025-02-13T04:20:40.906Z",
-        "detail": "Debt created to Uma: $100"
-      },
-      {
-        "time": "2025-02-13T04:20:41.172Z",
-        "detail": "Debt paid: -$100"
-      }
-    ],
-    "dailyWithdrawn": 0,
-    "debt": 0,
-    "failedAttempts": 0,
-    "locked": false
-  },
-  "Grace": {
-    "username": "Grace",
-    "hashedPin": "$2a$10$Ntq56fJ73wZis4JQYpdeIeEekVWSCQbNz8i3xXhEQV85SkkEVK2B.",
-    "balance": 0,
-    "transactionHistory": [],
-    "dailyWithdrawn": 0,
-    "debt": 0,
-    "failedAttempts": 3,
-    "locked": true
   }
 }

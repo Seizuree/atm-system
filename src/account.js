@@ -4,7 +4,8 @@ import { getCurrentTimestamp } from './utils.js'
 
 class Account {
   constructor(username, pin) {
-    if (!/^\d{4}$/.test(pin)) throw new Error('PIN must be exactly 4 digits.')
+    if (!/^\d{4}$/.test(pin))
+      throw new Error('PIN must be numbers and exactly 4 digits.')
     this.username = username
     this.hashedPin = Security.hashPin(pin)
     this.balance = 0

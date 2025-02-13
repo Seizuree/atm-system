@@ -1,0 +1,44 @@
+{
+  "Brian": {
+    "username": "Brian",
+    "hashedPin": "$2a$10$NyIQSum.u9QFjmJDvAoSzed.HrhGFv8JxheID93u3JTWWOZLXy0Qe",
+    "balance": 0,
+    "transactionHistory": [
+      {
+        "time": "2025-02-13T01:03:49.839Z",
+        "detail": "Deposit: +$500"
+      },
+      {
+        "time": "2025-02-13T01:08:00.325Z",
+        "detail": "Transfer to Doe: -$500"
+      },
+      {
+        "time": "2025-02-13T01:08:00.325Z",
+        "detail": "Debt created to Doe: $200"
+      },
+      {
+        "time": "2025-02-13T01:09:21.882Z",
+        "detail": "Deposit: +$0"
+      }
+    ],
+    "dailyWithdrawn": 0,
+    "debt": 0,
+    "failedAttempts": 0,
+    "locked": false
+  },
+  "Doe": {
+    "username": "Doe",
+    "hashedPin": "$2a$10$JjPHq8LiiK3SeGNvg7Mcau9BZB8vmfIUDP.oVYK23Wxm132BZEEoO",
+    "balance": 500,
+    "transactionHistory": [
+      {
+        "time": "2025-02-13T01:08:00.318Z",
+        "detail": "Deposit: +$500"
+      }
+    ],
+    "dailyWithdrawn": 0,
+    "debt": 0,
+    "failedAttempts": 0,
+    "locked": false
+  }
+}

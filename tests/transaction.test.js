@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, test } from '@jest/globals'
-import Account from '../src/account'
 import Database from '../src/database'
 import ATM from '../src/atm'
 
@@ -86,16 +85,42 @@ describe('Transaction Tests', () => {
     })
   })
 
-  test('Must test insufficient funds', () => {
-    const account = new Account('Liam', '4321')
-    expect(() => account.withdraw(300)).toThrow('Insufficient balance.')
+  test('Must test insufficient funds', (done) => {
+    const atm = new ATM()
+    const acc1 = atm.register('Liam', '4321')
+
+    if (acc1) {
+      const loginReadline = {
+        question: (_, callback) => {
+          callback('5678')
+        },
+      }
+
+      atm.login('Liam', loginReadline, () => {
+        expect(() => atm.withdraw(300)).toThrow('Insufficient balance.')
+        done()
+      })
+    }
   })
 
-  test('Must test daily withdrawal limits', () => {
-    const account = new Account('Mia', '5678')
-    account.deposit(2000)
-    expect(() => account.withdraw(1500)).toThrow(
-      'Exceeds daily withdrawal limit.'
-    )
+  test('Must test daily withdrawal limits', (done) => {
+    const atm = new ATM()
+    const acc1 = atm.register('Mia', '5678')
+
+    if (acc1) {
+      const loginReadline = {
+        question: (_, callback) => {
+          callback('5678')
+        },
+      }
+
+      atm.login('Mia', loginReadline, () => {
+        atm.deposit(2000)
+        expect(() => atm.withdraw(2000)).toThrow(
+          'Exceeds daily withdrawal limit.'
+        )
+        done()
+      })
+    }
   })
 })

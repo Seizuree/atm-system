@@ -1,11 +1,21 @@
 {
+  "Uma": {
+    "username": "Uma",
+    "hashedPin": "$2a$10$wuupfvGm3Te96qf6cu12jOeTv4BLGZJ9ejO26HnoiajNyBB1N6jJK",
+    "balance": 0,
+    "transactionHistory": [],
+    "dailyWithdrawn": 0,
+    "debt": 0,
+    "failedAttempts": 0,
+    "locked": false
+  },
   "Mia": {
     "username": "Mia",
-    "hashedPin": "$2a$10$.KHjT.fCfEeDmDZQL5ayEOuo06dEmIPZP6RE/qRHRWZv/agLwTnUW",
+    "hashedPin": "$2a$10$mqIDzFTuzUd4A1PkfD6..Oj2WKb9kmx.36k.THLG.vhm9ZETa1AKa",
     "balance": 2000,
     "transactionHistory": [
       {
-        "time": "2025-02-13T20:07:57.454Z",
+        "time": "2025-02-14T03:21:06.479Z",
         "detail": "Deposit: +$2000"
       }
     ],
